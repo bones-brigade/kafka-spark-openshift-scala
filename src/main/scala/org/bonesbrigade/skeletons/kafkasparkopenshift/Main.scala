@@ -12,7 +12,7 @@ object Main {
   }
 
   def main(args: Array[String]) : Unit = {
-    val intopic = getEnv("KAFKA_IN_TOPIC")
+    val intopic = getEnv("KAFKA_IN_TOPIC", "topic1")
     println("kafka in topic " + intopic)
   }
 
