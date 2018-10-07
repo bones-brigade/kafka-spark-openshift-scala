@@ -12,8 +12,13 @@ object Main {
   }
 
   def main(args: Array[String]) : Unit = {
+    val brokers = getEnv("KAFKA_BROKERS", "localhost:9092")
     val intopic = getEnv("KAFKA_IN_TOPIC", "topic1")
-    println("kafka in topic " + intopic)
+    val outtopic = getEnv("KAFKA_OUT_TOPIC", "topic2")
+    println("kafka-spark-openshift-scala starting")
+    println(" - brokers: " + brokers)
+    println(" - in topic: " + intopic)
+    println(" - out topic: " + outtopic)
   }
 
 }
