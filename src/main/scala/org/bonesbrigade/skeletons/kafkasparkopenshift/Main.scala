@@ -1,6 +1,9 @@
 package org.bonesbrigade.skeletons.kafkasparkopenshift
 
 import scala.sys
+import org.apache.spark.sql._
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.DataTypes
 
 object Main {
 
@@ -19,6 +22,29 @@ object Main {
     println(" - brokers: " + brokers)
     println(" - in topic: " + intopic)
     println(" - out topic: " + outtopic)
+
+    val spark = SparkSession
+      .builder
+      .appName("KafkaSparkOpenShiftScala")
+      .getOrCreate()
+
+    val records = spark
+      .readStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", brokers)
+      .option("subscribe", intopic)
+      .load()
+      .select(functions.column("value").cast(DataTypes.StringType).alias("value"))
+
+    val writer = records
+      .writeStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", brokers)
+      .option("topic", outtopic)
+      .option("checkpointLocation", "/tmp")
+      .start()
+
+    writer.awaitTermination()
   }
 
 }
