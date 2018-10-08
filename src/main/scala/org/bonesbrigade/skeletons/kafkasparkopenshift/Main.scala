@@ -23,11 +23,13 @@ object Main {
     println(" - in topic: " + intopic)
     println(" - out topic: " + outtopic)
 
+    /* acquire a SparkSession object */
     val spark = SparkSession
       .builder
       .appName("KafkaSparkOpenShiftScala")
       .getOrCreate()
 
+    /* configure the operations to read the input topic */
     val records = spark
       .readStream
       .format("kafka")
@@ -35,7 +37,20 @@ object Main {
       .option("subscribe", intopic)
       .load()
       .select(functions.column("value").cast(DataTypes.StringType).alias("value"))
+      /*
+      * add your data operations here, the raw message is passed along as
+      * the alias `value`.
+      *
+      * for example, to process the message as json and create the
+      * corresponding objects you could do the following:
+      *
+      * .select(functions.from_json(functions.column('value'), msg_struct).alias('json'));
+      *
+      * the following operations would then access the object and its
+      * properties using the name `json`.
+      */
 
+    /* configure the output stream */
     val writer = records
       .writeStream
       .format("kafka")
@@ -44,6 +59,7 @@ object Main {
       .option("checkpointLocation", "/tmp")
       .start()
 
+    /* begin processing the input and output topics */
     writer.awaitTermination()
   }
 
