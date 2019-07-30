@@ -18,7 +18,7 @@ object Main {
     val brokers = getEnv("KAFKA_BROKERS", "localhost:9092")
     val intopic = getEnv("KAFKA_IN_TOPIC", "topic1")
     val outtopic = getEnv("KAFKA_OUT_TOPIC", "topic2")
-    println("kafka-spark-openshift-scala starting")
+    println("kafka-spark-scala starting")
     println(" - brokers: " + brokers)
     println(" - in topic: " + intopic)
     println(" - out topic: " + outtopic)

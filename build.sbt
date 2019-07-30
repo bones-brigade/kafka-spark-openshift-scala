@@ -1,6 +1,6 @@
 val sparkVersion = "2.3.0"
 
-name := "kafka-spark-openshift-scala"
+name := "kafka-spark-scala"
 
 organization := "org.bonesbrigade"
 
